@@ -16,3 +16,14 @@
 - Utiliser le repository du github classroom en suivant [ce lien]() pour le binôme
 - Décrire dans ce ReadMe les détails de votre projet et comment vous avez surmonté les difficultés (typiquement concernant certains packages comme Room)
 - Ajouter le lien vers une vidéo (Youtube ou autre) avec une démo de votre projet où l'on voit son déploiement sur differentes plateformes
+
+## Comment lancer le projet
+### Android
+- Via le teminal lancer la commande `./gradlew installDebug`
+
+### Web
+- Via le terminal : vérifier si la tache est disponible avec la commande `./gradlew tasks`
+- Lancer la tache `./gradlew wasmBrowserDevelopmentRun`
+
+### Desktop
+- Via le terminal lancer la commande `./gradlew run`
