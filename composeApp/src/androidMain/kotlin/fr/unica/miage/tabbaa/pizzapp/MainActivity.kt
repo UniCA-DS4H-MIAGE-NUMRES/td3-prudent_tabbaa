@@ -3,21 +3,17 @@ package fr.unica.miage.tabbaa.pizzapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.enableEdgeToEdge
+import fr.unica.miage.tabbaa.pizzapp.ui.theme.PizzAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContent {
-            App()
+            PizzAppTheme {
+                MyApp() // Appel de la classe MyApp qui contient la logique de l'application
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
