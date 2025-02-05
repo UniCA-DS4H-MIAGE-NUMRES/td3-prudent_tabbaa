@@ -1,11 +1,13 @@
 package fr.unica.miage.tabbaa.pizzapp
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.singleWindowApplication
-import fr.unica.miage.tabbaa.pizzapp.viewmodel.PizzaViewModel
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
 
-fun main() = singleWindowApplication {
-    val viewModel = PizzaViewModel(PizzaRepository())
-    PizzaListScreen(viewModel)
+fun main() = application {
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "PizzApp",
+    ) {
+        App()
+    }
 }
