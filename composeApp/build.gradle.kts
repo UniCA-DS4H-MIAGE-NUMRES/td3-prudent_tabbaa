@@ -51,6 +51,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.android.driver)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.koin.core)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -62,36 +66,30 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-
             implementation(libs.runtime)
-
             implementation(libs.kotlinx.datetime)
-            implementation(libs.koin.core)
         }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            // implémenter sql delight
             implementation(libs.sqlite.driver)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.koin.core)
         }
 
         wasmJsMain.dependencies {
-            val wasmJsMain by getting {
-                dependencies {
-                    // 🚨 Do NOT include SQLDelight in Web/WASM
-                    configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
-                }
-            }
+            // Exclude SQLDelight for WASM
+            configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
         }
     }
     sqldelight {
         databases {
             create("PizzaDatabase") {
                 packageName = "fr.unica.miage.tabbaa.pizzapp.db"
-                // ✅ EXCLUDE Web (WASM)
+                // EXCLUDE Web (WASM)
                 dialect("sqlite:3.25")
             }
         }
