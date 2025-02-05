@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -40,13 +42,15 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+            implementation(libs.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -57,12 +61,42 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            implementation(libs.runtime)
+
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.koin.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            // implémenter sql delight
+            implementation(libs.sqlite.driver)
+        }
+
+        wasmJsMain.dependencies {
+            val wasmJsMain by getting {
+                dependencies {
+                    // 🚨 Do NOT include SQLDelight in Web/WASM
+                    configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
+                }
+            }
         }
     }
+    sqldelight {
+        databases {
+            create("PizzaDatabase") {
+                packageName = "fr.unica.miage.tabbaa.pizzapp.db"
+                // ✅ EXCLUDE Web (WASM)
+                dialect("sqlite:3.25")
+            }
+        }
+    }
+
 }
 
 android {
