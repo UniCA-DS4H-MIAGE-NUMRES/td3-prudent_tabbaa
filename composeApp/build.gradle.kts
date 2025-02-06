@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.room.runtime)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.gson)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -72,6 +73,7 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
 
         }
 
