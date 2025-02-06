@@ -10,7 +10,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-    alias(libs.plugins.sqldelight)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -50,11 +52,15 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-            implementation(libs.android.driver)
+
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.koin.core)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.room.runtime)
+            implementation(libs.androidx.navigation.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -63,38 +69,28 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.runtime)
             implementation(libs.kotlinx.datetime)
+
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.sqlite.driver)
+
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.koin.core)
+
+            implementation("org.xerial:sqlite-jdbc:3.43.2.0")
         }
 
         wasmJsMain.dependencies {
-            // Exclude SQLDelight for WASM
-            configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
-        }
-    }
-    sqldelight {
-        databases {
-            create("PizzaDatabase") {
-                packageName = "fr.unica.miage.tabbaa.pizzapp.db"
-                // EXCLUDE Web (WASM)
-                dialect("sqlite:3.25")
-            }
-        }
-    }
 
+        }
+    }
 }
 
 android {
@@ -138,4 +134,14 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+dependencies {
+    add("kspAndroid", libs.room.compiler)
+    add("kspDesktop", libs.room.compiler)
+
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
