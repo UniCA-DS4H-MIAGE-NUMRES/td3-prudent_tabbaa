@@ -15,7 +15,7 @@ import fr.unica.miage.tabbaa.pizzapp.util.OrderConverters
 @Database(entities = [OrderEntity::class], version = 1, exportSchema = false)
 @TypeConverters(OrderConverters::class)
 abstract class PizzaDatabase : RoomDatabase() {
-    abstract fun orderDao(): OrderDao
+    abstract fun orderDao(): AndroidOrderDao
 
     companion object {
         @Volatile

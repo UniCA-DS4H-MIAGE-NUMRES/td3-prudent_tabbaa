@@ -7,20 +7,20 @@ import kotlinx.coroutines.flow.map
 
 class DataSource(private val orderDao: OrderDao) {
 
-    // ✅ Gère l'historique des commandes
+    // Historique des commandes
     val orderHistory: Flow<List<Order>> = orderDao.getAllOrders()
 
-    // ✅ Fonction pour sauvegarder une commande
+    // Fonction pour sauvegarder une commande
     suspend fun saveOrder(order: Order) {
         orderDao.insertOrder(order)
     }
 
-    // ✅ Fonction pour supprimer toutes les commandes
+    // Fonction pour supprimer toutes les commandes
     suspend fun clearOrders() {
         orderDao.clearOrders()
     }
 
-    // ✅ Fonction pour récupérer la liste des pizzas
+    // Fonction pour récupérer la liste des pizzas (FAUT METTRE LES VRAIES IMAGES A VOIR COMMENT FAIRE)
     fun getPizzas(): List<Pizza> {
         return listOf(
             Pizza("Margherita", 8.0, 1, listOf("Tomate", "Mozzarella", "Basilic")),

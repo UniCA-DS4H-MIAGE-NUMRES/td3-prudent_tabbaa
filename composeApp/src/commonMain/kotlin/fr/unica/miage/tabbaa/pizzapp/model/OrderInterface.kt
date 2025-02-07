@@ -1,6 +1,6 @@
 package fr.unica.miage.tabbaa.pizzapp.model
 
-interface OrderInterface {
+interface OrderInterface { // A SUPPRIMER ?
     val date: String
     val totalPrice: Double
     val paymentMethod: String

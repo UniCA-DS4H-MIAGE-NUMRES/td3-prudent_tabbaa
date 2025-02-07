@@ -7,8 +7,11 @@ import androidx.room.Query
 import fr.unica.miage.tabbaa.pizzapp.model.OrderEntity
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Implémentation Android de OrderDao en utilisant Room.
+ */
 @Dao
-interface OrderDao {
+interface AndroidOrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: OrderEntity)
 

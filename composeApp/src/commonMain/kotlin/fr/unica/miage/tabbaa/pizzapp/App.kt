@@ -17,8 +17,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun App() {
     MaterialTheme {
-        val dataSource = remember { DataSourceFactory.getInstance() } // ✅ Utilisation de DataSourceFactory
-        val pizzas = dataSource.getPizzas() // ✅ Obtenir les pizzas
+        val dataSource = remember { DataSourceFactory.getInstance() }
+        val pizzas = dataSource.getPizzas()
 
         Scaffold(
             topBar = {
@@ -44,8 +44,8 @@ fun PizzaItem(pizza: Pizza) {
             .padding(8.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = pizza.name, style = MaterialTheme.typography.h6) // ✅ Utiliser h6 au lieu de titleMedium
-            Text(text = "Prix: ${pizza.price}€", style = MaterialTheme.typography.body1) // ✅ Utiliser body1 au lieu de bodyMedium
+            Text(text = pizza.name, style = MaterialTheme.typography.h6)
+            Text(text = "Prix: ${pizza.price}€", style = MaterialTheme.typography.body1)
         }
     }
 }
