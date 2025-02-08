@@ -35,6 +35,7 @@ sqlite = "2.1.0"
 gson = "2.10.1"
 navigationRuntimeAndroid = "2.9.0-alpha05"
 uiAndroid = "1.7.7"
+navigationRuntimeKtxVersion = "2.8.6"
 
 [libraries]
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -84,6 +85,7 @@ androidx-lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "l
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtxVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

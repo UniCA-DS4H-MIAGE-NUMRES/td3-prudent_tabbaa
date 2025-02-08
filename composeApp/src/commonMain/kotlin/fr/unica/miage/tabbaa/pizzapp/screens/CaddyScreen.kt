@@ -59,7 +59,10 @@ fun CaddyScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
-        }
+        },
+        bottomBar = {
+            BottomNavBar(navController = navController)
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier

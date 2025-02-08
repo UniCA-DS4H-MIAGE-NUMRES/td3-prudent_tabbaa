@@ -1,6 +1,15 @@
 package fr.unica.miage.tabbaa.pizzapp
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
 import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.tabbaa.pizzapp.model.Pizza
@@ -79,3 +88,4 @@ fun App() {
 
     }
 }
+

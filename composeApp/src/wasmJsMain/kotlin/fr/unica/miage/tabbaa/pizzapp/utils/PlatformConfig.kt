@@ -5,4 +5,5 @@ actual object PlatformConfig {
     actual val buttonHeight: Float = 50f
     actual val textSize: Float = 15f
     actual val isWeb: Boolean = true
+    actual val isAndroid: Boolean = false
 }

@@ -140,6 +140,7 @@ compose.desktop {
 }
 
 dependencies {
+    implementation(libs.navigation.runtime.ktx)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.runtime.android)
     add("kspAndroid", libs.room.compiler)

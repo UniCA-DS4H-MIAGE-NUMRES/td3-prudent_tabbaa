@@ -21,6 +21,7 @@ import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
 import fr.unica.miage.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
 import fr.unica.miage.tabbaa.pizzapp.utils.loadImage
+import fr.unica.miage.tabbaa.pizzapp.screens.BottomNavBar
 import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +46,9 @@ fun MenuScreen(navController: NavControllerWrapper) {
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
+        },
+        bottomBar = {
+            BottomNavBar(navController = navController)
         },
         content = { innerPadding ->
             LazyVerticalGrid(

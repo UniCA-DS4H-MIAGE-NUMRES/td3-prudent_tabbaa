@@ -68,6 +68,9 @@ fun CommandeHistoryScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
         },
+        bottomBar = {
+            BottomNavBar(navController = navController)
+        },
         content = { innerPadding ->
             if (orderHistory.value.isEmpty()) {
                 Box(

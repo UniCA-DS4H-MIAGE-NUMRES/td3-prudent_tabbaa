@@ -6,5 +6,4 @@ expect object PlatformConfig {
     val textSize: Float
     val isAndroid: Boolean
     val isWeb: Boolean
-
 }

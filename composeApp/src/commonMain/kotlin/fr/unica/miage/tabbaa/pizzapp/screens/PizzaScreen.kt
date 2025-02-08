@@ -45,14 +45,8 @@ fun PizzaScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("CaddyScreen") },
-                containerColor = Color(0xFFE63946), // Couleur du bouton
-                contentColor = Color.White
-            ) {
-                Icon(Icons.Filled.ShoppingCart, contentDescription = "Voir le panier")
-            }
+        bottomBar = {
+            BottomNavBar(navController = navController)
         },
         content = { innerPadding ->
             Column(
