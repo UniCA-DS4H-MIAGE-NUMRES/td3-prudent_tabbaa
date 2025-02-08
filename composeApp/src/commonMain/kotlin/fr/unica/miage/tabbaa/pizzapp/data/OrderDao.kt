@@ -6,6 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface OrderDao {
     suspend fun insertOrder(order: Order)
     fun getAllOrders(): Flow<List<Order>>
-    suspend fun clearOrders()
     suspend fun deleteAllOrders()
 }

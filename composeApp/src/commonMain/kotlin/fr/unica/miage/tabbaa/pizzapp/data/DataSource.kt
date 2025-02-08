@@ -16,8 +16,8 @@ class DataSource(private val orderDao: OrderDao) {
     }
 
     // Fonction pour supprimer toutes les commandes
-    suspend fun clearOrders() {
-        orderDao.clearOrders()
+    suspend fun deleteAllOrders() {
+        orderDao.deleteAllOrders()
     }
 
     // Fonction pour récupérer la liste des pizzas (FAUT METTRE LES VRAIES IMAGES A VOIR COMMENT FAIRE)

@@ -2,16 +2,20 @@ package fr.unica.miage.tabbaa.pizzapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.unica.miage.tabbaa.pizzapp.screens.*
 import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
+import fr.unica.miage.tabbaa.pizzapp.model.Order
 import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.tabbaa.pizzapp.model.Pizza
+import fr.unica.miage.tabbaa.pizzapp.utils.getCurrentDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 actual class NavControllerWrapper(val navController: NavHostController) {
     actual var onNavigate: ((String) -> Unit)? = null
@@ -43,6 +47,7 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
 
     val cartItems = remember { MutableStateFlow<List<OrderItem>>(emptyList()) }
     val orderRepository = remember { DataSourceFactory.getOrderRepository() }
+    val coroutineScope = rememberCoroutineScope()
 
     fun addToCart(pizza: Pizza, extraCheese: Int) {
         val updatedCart = cartItems.value.toMutableList()
@@ -83,8 +88,20 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
                 cartItems = cartItems,
                 onClearCart = { cartItems.value = emptyList() },
                 onAddOrder = { paymentMethod ->
-                    println("Commande passée avec la méthode de paiement : $paymentMethod")
-                }
+                    coroutineScope.launch {
+                        val order = Order(
+                            date = getCurrentDate(), // Fonction pour récupérer la date du jour
+                            totalPrice = cartItems.value.sumOf { item ->
+                                (item.pizza.price * item.quantity) + (item.extraCheese * 0.02)
+                            },
+                            paymentMethod = paymentMethod,
+                            items = cartItems.value
+                        )
+                        orderRepository.addOrder(order)
+                        println("Commande ajoutée avec succès")
+                    }
+                },
+                orderRepository = orderRepository
             )
         }
         composable("CommandeHistoryScreen") {

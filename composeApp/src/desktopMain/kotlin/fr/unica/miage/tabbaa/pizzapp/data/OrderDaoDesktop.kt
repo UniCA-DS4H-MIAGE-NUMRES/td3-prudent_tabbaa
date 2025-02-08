@@ -40,14 +40,10 @@ class OrderDaoDesktop : OrderDao {
 
     override fun getAllOrders(): Flow<List<Order>> = orders
 
-    override suspend fun clearOrders() {
+    override suspend fun deleteAllOrders() {
         val connection = getConnection()
         connection.createStatement().execute("DELETE FROM orders")
         connection.close()
-    }
-
-    override suspend fun deleteAllOrders() {
-        clearOrders()
     }
 
     private fun getConnection(): Connection {

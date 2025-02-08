@@ -19,8 +19,6 @@ interface AndroidOrderDao {
     fun getAllOrders(): Flow<List<OrderEntity>>
 
     @Query("DELETE FROM orders")
-    suspend fun clearOrders()
-
-    @Query("DELETE FROM orders")
     suspend fun deleteAllOrders()
 }
+

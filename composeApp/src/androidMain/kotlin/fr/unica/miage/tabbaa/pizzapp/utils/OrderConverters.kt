@@ -5,20 +5,21 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
 
-/**
- * Classe pour convertir la liste d'OrderItem en JSON pour Room
- */
 class OrderConverters {
     private val gson = Gson()
 
     @TypeConverter
-    fun fromOrderItemList(items: List<OrderItem>): String {
-        return gson.toJson(items)
+    fun fromOrderItemList(orderItems: List<OrderItem>?): String {
+        return gson.toJson(orderItems)
     }
 
     @TypeConverter
-    fun toOrderItemList(data: String): List<OrderItem> {
-        val type = object : TypeToken<List<OrderItem>>() {}.type
-        return gson.fromJson(data, type)
+    fun toOrderItemList(orderItemsString: String?): List<OrderItem> {
+        return if (orderItemsString.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            val type = object : TypeToken<List<OrderItem>>() {}.type
+            gson.fromJson(orderItemsString, type)
+        }
     }
 }

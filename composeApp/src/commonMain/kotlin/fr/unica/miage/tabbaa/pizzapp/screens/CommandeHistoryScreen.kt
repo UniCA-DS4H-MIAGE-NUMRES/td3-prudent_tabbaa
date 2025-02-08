@@ -31,62 +31,52 @@ import kotlin.math.round
 @Composable
 fun CommandeHistoryScreen(
     navController: NavControllerWrapper,
-    orderRepository: OrderRepository // Multiplateforme (Android: Room / Desktop: SQLite)
+    orderRepository: OrderRepository
 ) {
-    val orderHistory by orderRepository.getOrders().collectAsState(emptyList()) // Liste des commandes
+    val orderHistory = remember { mutableStateOf<List<Order>>(emptyList()) }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Charger les commandes dès l'affichage
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            orderRepository.getOrders().collect { orders ->
+                orderHistory.value = orders
+            }
+        }
+    }
 
     Scaffold(
         containerColor = Color(0xFFFFF8E1),
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Historique des Commandes",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White
-                    )
-                },
+                title = { Text("Historique des Commandes", style = MaterialTheme.typography.titleLarge, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("HomeScreen") }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Retour",
-                            tint = Color.White
-                        )
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
                     }
                 },
                 actions = {
-                    val coroutineScope = rememberCoroutineScope()
-
                     IconButton(onClick = {
                         coroutineScope.launch {
-                            orderRepository.clearOrders()
+                            orderRepository.deleteAllOrders()
+                            orderHistory.value = emptyList()
                         }
                     }) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Supprimer toutes les commandes",
-                            tint = Color.White
-                        )
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Supprimer toutes les commandes", tint = Color.White)
                     }
                 },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
         },
         content = { innerPadding ->
-            if (orderHistory.isEmpty()) {
+            if (orderHistory.value.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Aucune commande enregistrée.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFA0522D)
-                    )
+                    Text("Aucune commande enregistrée.", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Color(0xFFA0522D))
                 }
             } else {
                 LazyColumn(
@@ -96,7 +86,7 @@ fun CommandeHistoryScreen(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(orderHistory) { order ->
+                    items(orderHistory.value) { order ->
                         OrderCard(order)
                     }
                 }

@@ -72,7 +72,8 @@ fun App() {
             onClearCart = { cartItems.value = emptyList() },
             onAddOrder = { paymentMethod ->
                 println("Commande passée avec la méthode de paiement : $paymentMethod")
-            }
+            },
+            orderRepository = orderRepository
         )
         "CommandeHistoryScreen" -> CommandeHistoryScreen(navController, orderRepository)
 

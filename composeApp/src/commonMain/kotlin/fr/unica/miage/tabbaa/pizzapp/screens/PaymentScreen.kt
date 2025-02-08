@@ -12,11 +12,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.unica.miage.tabbaa.pizzapp.data.OrderRepository
+import fr.unica.miage.tabbaa.pizzapp.model.Order
 import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
+import fr.unica.miage.tabbaa.pizzapp.utils.getCurrentDate
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,9 +30,11 @@ fun PaymentScreen(
     navController: NavControllerWrapper,
     cartItems: StateFlow<List<OrderItem>>, // Liste des articles du panier
     onClearCart: () -> Unit, // Fonction pour vider le panier
-    onAddOrder: (String) -> Unit // Fonction pour ajouter une commande
+    onAddOrder: (String) -> Unit, // Fonction pour ajouter une commande
+    orderRepository: OrderRepository
 ) {
     val cartItemsState by cartItems.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     // Calcul du prix total
     val totalPrice by derivedStateOf {
@@ -131,9 +138,17 @@ fun PaymentScreen(
                 Button(
                     onClick = {
                         if (selectedPaymentMethod != null) {
-                            onAddOrder(selectedPaymentMethod!!)
-                            onClearCart()
-                            isPaymentSuccess = true
+                            coroutineScope.launch {
+                                val order = Order(
+                                    date = getCurrentDate(), // Fonction pour récupérer la date du jour
+                                    totalPrice = totalPrice,
+                                    paymentMethod = selectedPaymentMethod!!,
+                                    items = cartItemsState
+                                )
+                                orderRepository.addOrder(order)
+                                onClearCart()
+                                isPaymentSuccess = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -143,6 +158,7 @@ fun PaymentScreen(
                 ) {
                     Text("Payer", fontSize = 16.sp, color = Color.White)
                 }
+
             }
         }
     )
