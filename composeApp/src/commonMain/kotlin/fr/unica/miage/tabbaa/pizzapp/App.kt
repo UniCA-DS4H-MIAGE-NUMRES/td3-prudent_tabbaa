@@ -2,32 +2,35 @@ package fr.unica.miage.tabbaa.pizzapp
 
 import androidx.compose.runtime.*
 import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
+import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
 import fr.unica.miage.tabbaa.pizzapp.navigation.rememberNavControllerWrapper
-import fr.unica.miage.tabbaa.pizzapp.screens.HomeScreen
-import fr.unica.miage.tabbaa.pizzapp.screens.MenuScreen
-import fr.unica.miage.tabbaa.pizzapp.screens.PizzaScreen
-import fr.unica.miage.tabbaa.pizzapp.utils.PlatformConfig
+import fr.unica.miage.tabbaa.pizzapp.screens.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun App() {
     val navController = rememberNavControllerWrapper()
-
-    // Le `NavHost` gère la navigation dans Android
-    if (PlatformConfig.isAndroid) {
-        // `rememberNavControllerWrapper` contient le NavHost
-        return
-    }
-
-    // Autres plateformes (Desktop/Web)
     val dataSource = remember { DataSourceFactory.getInstance() }
     val pizzas = dataSource.getPizzas()
 
     var currentScreen by remember { mutableStateOf("HomeScreen") }
     var selectedPizza by remember { mutableStateOf<Pizza?>(null) }
 
+    val cartItems = remember { MutableStateFlow<List<OrderItem>>(emptyList()) }
+
+    fun addToCart(pizza: Pizza, extraCheese: Int) {
+        val updatedCart = cartItems.value.toMutableList()
+        val newItem = OrderItem(id = updatedCart.size + 1, pizza = pizza, quantity = 1, extraCheese = extraCheese)
+        updatedCart.add(newItem)
+        cartItems.value = updatedCart
+    }
+
+    // ✅ Met à jour `currentScreen` dès qu'on appelle `navController.navigate()`
     navController.onNavigate = { route ->
+        println("DEBUG: Changement d'écran vers $route")
         if (route.startsWith("PizzaScreen/")) {
             val pizzaId = route.substringAfter("PizzaScreen/").toIntOrNull()
             selectedPizza = pizzas.find { it.id == pizzaId }
@@ -43,7 +46,25 @@ fun App() {
         "HomeScreen" -> HomeScreen(navController)
         "MenuScreen" -> MenuScreen(navController)
         "PizzaScreen" -> selectedPizza?.let { pizza ->
-            PizzaScreen(pizza = pizza, navController = navController)
+            PizzaScreen(
+                pizza = pizza,
+                navController = navController,
+                onAddToCart = { pizza, extraCheese -> addToCart(pizza, extraCheese) }
+            )
         }
+        "CaddyScreen" -> CaddyScreen(
+            cartItems = cartItems,
+            onUpdateQuantity = { id, newCheese ->
+                cartItems.value = cartItems.value.map {
+                    if (it.id == id) it.copy(extraCheese = newCheese) else it
+                }
+            },
+            onRemoveItem = { id ->
+                cartItems.value = cartItems.value.filter { it.id != id }
+            },
+            onAddDuplicate = { pizza, extraCheese -> addToCart(pizza, extraCheese) },
+            onCheckout = { /* À implémenter */ },
+            navController = navController
+        )
     }
 }

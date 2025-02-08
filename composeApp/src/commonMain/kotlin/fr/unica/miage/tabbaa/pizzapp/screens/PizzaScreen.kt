@@ -8,11 +8,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +26,8 @@ import kotlin.math.round
 @Composable
 fun PizzaScreen(
     pizza: Pizza,
-    navController: NavControllerWrapper
+    navController: NavControllerWrapper,
+    onAddToCart: (Pizza, Int) -> Unit
 ) {
     var extraCheese by remember { mutableStateOf(0) }
     val scrollState = rememberScrollState()
@@ -37,12 +38,21 @@ fun PizzaScreen(
             TopAppBar(
                 title = { Text("Détails de la Pizza", color = Color.White) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("MenuScreen") }) { // Retour au menu
+                    IconButton(onClick = { navController.navigate("MenuScreen") }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE3B58A))
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("CaddyScreen") },
+                containerColor = Color(0xFFE63946), // Couleur du bouton
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Filled.ShoppingCart, contentDescription = "Voir le panier")
+            }
         },
         content = { innerPadding ->
             Column(
@@ -54,21 +64,18 @@ fun PizzaScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                // Image de la pizza
                 Image(
-                    painter = loadImage(pizza.image), // Charge l'image de la pizza
+                    painter = loadImage(pizza.image),
                     contentDescription = pizza.name,
                     modifier = Modifier.size(180.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Nom et prix de la pizza
                 Text(pizza.name, fontSize = 28.sp, color = Color(0xFF1E8560))
                 Text("Prix: ${round(pizza.price * 100) / 100}€", fontSize = 20.sp, color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Liste des ingrédients
                 Text("Ingrédients :", fontSize = 20.sp, color = Color(0xFFA0522D))
                 Spacer(modifier = Modifier.height(8.dp))
                 pizza.ingredients.forEach { ingredient ->
@@ -88,7 +95,6 @@ fun PizzaScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Slider pour le fromage supplémentaire
                 Text("Fromage supplémentaire : $extraCheese g", fontSize = 16.sp)
                 Slider(
                     value = extraCheese.toFloat(),
@@ -102,9 +108,9 @@ fun PizzaScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Bouton Ajouter au Panier
+                // Bouton Ajouter au Panier (ajoute sans navigation)
                 Button(
-                    onClick = { navController.navigate("CaddyScreen") },
+                    onClick = { onAddToCart(pizza, extraCheese) },
                     modifier = Modifier
                         .fillMaxWidth(PlatformConfig.buttonWidth)
                         .height(PlatformConfig.buttonHeight.dp),

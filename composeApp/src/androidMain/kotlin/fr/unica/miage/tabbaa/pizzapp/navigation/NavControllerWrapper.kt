@@ -1,21 +1,36 @@
 package fr.unica.miage.tabbaa.pizzapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.unica.miage.tabbaa.pizzapp.screens.HomeScreen
-import fr.unica.miage.tabbaa.pizzapp.screens.MenuScreen
-import fr.unica.miage.tabbaa.pizzapp.screens.PizzaScreen
+import fr.unica.miage.tabbaa.pizzapp.screens.*
 import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
+import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
+import fr.unica.miage.tabbaa.pizzapp.model.Pizza
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 actual class NavControllerWrapper(val navController: NavHostController) {
-    actual fun navigate(route: String) {
-        navController.navigate(route)
+    actual var onNavigate: ((String) -> Unit)? = null
+
+    fun getCurrentRoute(): String? {
+        return navController.currentBackStackEntry?.destination?.route
     }
 
-    actual var onNavigate: ((String) -> Unit)? = null
+    actual fun navigate(route: String) {
+        println("DEBUG: Navigation vers $route") // ✅ Ajout d'un log pour vérifier
+
+        if (getCurrentRoute() == route) {
+            println("DEBUG: Déjà sur la page $route, pas de navigation")
+            return
+        }
+
+        onNavigate?.invoke(route) // ✅ Met à jour `currentScreen` dans `App.kt`
+        navController.navigate(route)
+    }
 }
 
 @Composable
@@ -23,9 +38,17 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
     val navController = rememberNavController()
     val navWrapper = NavControllerWrapper(navController)
 
-    // Définir les routes pour Android
     val dataSource = DataSourceFactory.getInstance()
     val pizzas = dataSource.getPizzas()
+
+    val cartItems = remember { MutableStateFlow<List<OrderItem>>(emptyList()) }
+
+    fun addToCart(pizza: Pizza, extraCheese: Int) {
+        val updatedCart = cartItems.value.toMutableList()
+        val newItem = OrderItem(id = updatedCart.size + 1, pizza = pizza, quantity = 1, extraCheese = extraCheese)
+        updatedCart.add(newItem)
+        cartItems.value = updatedCart
+    }
 
     NavHost(navController = navController, startDestination = "HomeScreen") {
         composable("HomeScreen") { HomeScreen(navWrapper) }
@@ -33,7 +56,25 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
         composable("PizzaScreen/{pizzaId}") { backStackEntry ->
             val pizzaId = backStackEntry.arguments?.getString("pizzaId")?.toIntOrNull()
             val selectedPizza = pizzas.find { it.id == pizzaId }
-            selectedPizza?.let { PizzaScreen(it, navWrapper) }
+            selectedPizza?.let {
+                PizzaScreen(it, navWrapper, onAddToCart = { pizza, extraCheese -> addToCart(pizza, extraCheese) })
+            }
+        }
+        composable("CaddyScreen") {
+            CaddyScreen(
+                cartItems = cartItems,
+                onUpdateQuantity = { id, newCheese ->
+                    cartItems.value = cartItems.value.map {
+                        if (it.id == id) it.copy(extraCheese = newCheese) else it
+                    }
+                },
+                onRemoveItem = { id ->
+                    cartItems.value = cartItems.value.filter { it.id != id }
+                },
+                onAddDuplicate = { pizza, extraCheese -> addToCart(pizza, extraCheese) },
+                onCheckout = { /* À implémenter */ },
+                navController = navWrapper
+            )
         }
     }
 
