@@ -98,8 +98,9 @@ fun PizzaScreen(
                 Text("Fromage supplémentaire : $extraCheese g", fontSize = 16.sp)
                 Slider(
                     value = extraCheese.toFloat(),
-                    onValueChange = { extraCheese = it.coerceAtMost(100f).toInt() },
+                    onValueChange = { extraCheese = (round(it / 10) * 10).toInt() },
                     valueRange = 0f..100f,
+                    steps = 9,
                     colors = SliderDefaults.colors(
                         thumbColor = Color(0xFFE63946),
                         activeTrackColor = Color(0xFFFFC107)
