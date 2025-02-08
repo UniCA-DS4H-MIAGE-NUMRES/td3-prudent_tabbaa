@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.ResultSet
 
 class OrderDaoDesktop : OrderDao {
     private val orders = MutableStateFlow<List<Order>>(emptyList())
@@ -45,6 +44,10 @@ class OrderDaoDesktop : OrderDao {
         val connection = getConnection()
         connection.createStatement().execute("DELETE FROM orders")
         connection.close()
+    }
+
+    override suspend fun deleteAllOrders() {
+        clearOrders()
     }
 
     private fun getConnection(): Connection {

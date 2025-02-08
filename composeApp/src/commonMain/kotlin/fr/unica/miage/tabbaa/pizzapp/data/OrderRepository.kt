@@ -3,9 +3,8 @@ package fr.unica.miage.tabbaa.pizzapp.data
 import fr.unica.miage.tabbaa.pizzapp.model.Order
 import kotlinx.coroutines.flow.Flow
 
-interface OrderDao {
-    suspend fun insertOrder(order: Order)
-    fun getAllOrders(): Flow<List<Order>>
+expect class OrderRepository(orderDao: OrderDao) {
+    fun getOrders(): Flow<List<Order>>
+    suspend fun addOrder(order: Order)
     suspend fun clearOrders()
-    suspend fun deleteAllOrders()
 }

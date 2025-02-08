@@ -20,4 +20,8 @@ class AndroidOrderDaoImpl(private val androidDao: AndroidOrderDao) : OrderDao {
     override suspend fun clearOrders() {
         androidDao.clearOrders()
     }
+
+    override suspend fun deleteAllOrders() {
+        androidDao.deleteAllOrders()
+    }
 }

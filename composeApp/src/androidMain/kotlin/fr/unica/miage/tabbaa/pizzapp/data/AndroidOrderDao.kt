@@ -20,4 +20,7 @@ interface AndroidOrderDao {
 
     @Query("DELETE FROM orders")
     suspend fun clearOrders()
+
+    @Query("DELETE FROM orders")
+    suspend fun deleteAllOrders()
 }

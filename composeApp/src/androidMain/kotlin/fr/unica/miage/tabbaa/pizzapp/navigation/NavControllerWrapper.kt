@@ -21,14 +21,14 @@ actual class NavControllerWrapper(val navController: NavHostController) {
     }
 
     actual fun navigate(route: String) {
-        println("DEBUG: Navigation vers $route") // ✅ Ajout d'un log pour vérifier
+        println("DEBUG: Navigation vers $route")
 
         if (getCurrentRoute() == route) {
             println("DEBUG: Déjà sur la page $route, pas de navigation")
             return
         }
 
-        onNavigate?.invoke(route) // ✅ Met à jour `currentScreen` dans `App.kt`
+        onNavigate?.invoke(route)
         navController.navigate(route)
     }
 }
@@ -42,6 +42,7 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
     val pizzas = dataSource.getPizzas()
 
     val cartItems = remember { MutableStateFlow<List<OrderItem>>(emptyList()) }
+    val orderRepository = remember { DataSourceFactory.getOrderRepository() }
 
     fun addToCart(pizza: Pizza, extraCheese: Int) {
         val updatedCart = cartItems.value.toMutableList()
@@ -85,6 +86,9 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
                     println("Commande passée avec la méthode de paiement : $paymentMethod")
                 }
             )
+        }
+        composable("CommandeHistoryScreen") {
+            CommandeHistoryScreen(navWrapper, orderRepository)
         }
 
     }

@@ -20,6 +20,7 @@ fun App() {
     var selectedPizza by remember { mutableStateOf<Pizza?>(null) }
 
     val cartItems = remember { MutableStateFlow<List<OrderItem>>(emptyList()) }
+    val orderRepository = remember { DataSourceFactory.getOrderRepository() }
 
     fun addToCart(pizza: Pizza, extraCheese: Int) {
         val updatedCart = cartItems.value.toMutableList()
@@ -28,7 +29,6 @@ fun App() {
         cartItems.value = updatedCart
     }
 
-    // ✅ Met à jour `currentScreen` dès qu'on appelle `navController.navigate()`
     navController.onNavigate = { route ->
         println("DEBUG: Changement d'écran vers $route")
         if (route.startsWith("PizzaScreen/")) {
@@ -74,5 +74,7 @@ fun App() {
                 println("Commande passée avec la méthode de paiement : $paymentMethod")
             }
         )
+        "CommandeHistoryScreen" -> CommandeHistoryScreen(navController, orderRepository)
+
     }
 }
