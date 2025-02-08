@@ -76,6 +76,17 @@ actual fun rememberNavControllerWrapper(): NavControllerWrapper {
                 navController = navWrapper
             )
         }
+        composable("PaymentScreen") {
+            PaymentScreen(
+                navController = navWrapper,
+                cartItems = cartItems,
+                onClearCart = { cartItems.value = emptyList() },
+                onAddOrder = { paymentMethod ->
+                    println("Commande passée avec la méthode de paiement : $paymentMethod")
+                }
+            )
+        }
+
     }
 
     return navWrapper

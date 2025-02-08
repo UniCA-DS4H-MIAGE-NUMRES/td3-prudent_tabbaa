@@ -66,5 +66,13 @@ fun App() {
             onCheckout = { /* À implémenter */ },
             navController = navController
         )
+        "PaymentScreen" -> PaymentScreen(
+            navController = navController,
+            cartItems = cartItems,
+            onClearCart = { cartItems.value = emptyList() },
+            onAddOrder = { paymentMethod ->
+                println("Commande passée avec la méthode de paiement : $paymentMethod")
+            }
+        )
     }
 }

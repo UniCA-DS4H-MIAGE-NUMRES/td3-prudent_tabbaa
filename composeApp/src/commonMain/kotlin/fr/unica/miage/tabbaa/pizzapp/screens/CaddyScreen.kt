@@ -108,7 +108,7 @@ fun CaddyScreen(
                 )
 
                 Button(
-                    onClick = onCheckout,
+                    onClick = { navController.navigate("PaymentScreen") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA0522D))
                 ) {
