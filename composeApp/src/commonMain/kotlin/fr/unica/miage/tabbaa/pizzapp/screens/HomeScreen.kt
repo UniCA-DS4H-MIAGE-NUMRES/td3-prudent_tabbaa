@@ -3,7 +3,7 @@ package fr.unica.miage.tabbaa.pizzapp.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
-import org.jetbrains.compose.resources.painterResource
-import androidx.compose.material3.Scaffold
+import fr.unica.miage.tabbaa.pizzapp.utils.PlatformConfig
+import fr.unica.miage.tabbaa.pizzapp.utils.loadImage
 
 @Composable
 fun HomeScreen(navController: NavControllerWrapper) {
@@ -28,15 +28,17 @@ fun HomeScreen(navController: NavControllerWrapper) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                /*Image(
-                    painter = painterResource("R.drawable.logo"),
-                    contentDescription = "PizzaApp Logo",
-                    modifier = Modifier.size(240.dp)
-                )*/
+                if (!PlatformConfig.isWeb) {
+                    Image(
+                        painter = loadImage("logo.png"),
+                        contentDescription = "PizzaApp Logo",
+                        modifier = Modifier.size(240.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text( // ✅ Titre
+                Text(
                     text = "PizzaApp",
                     fontSize = 32.sp,
                     color = Color.Black
@@ -44,7 +46,7 @@ fun HomeScreen(navController: NavControllerWrapper) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text( // ✅ Description
+                Text(
                     text = "Les meilleures pizzas italiennes livrées chez vous !",
                     fontSize = 18.sp,
                     color = Color(0xFF8D6E63),
@@ -101,10 +103,10 @@ fun GradientButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .fillMaxWidth(0.8f)
-            .height(56.dp),
+            .fillMaxWidth(PlatformConfig.buttonWidth)
+            .height(PlatformConfig.buttonHeight.dp),
         colors = ButtonDefaults.buttonColors(
-
+            containerColor = Color.Transparent,
             contentColor = Color.White
         ),
         contentPadding = PaddingValues(0.dp)
@@ -117,7 +119,7 @@ fun GradientButton(
         ) {
             Text(
                 text = text,
-                fontSize = 16.sp,
+                fontSize = PlatformConfig.textSize.sp,
                 color = Color.White
             )
         }

@@ -74,7 +74,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-
+            implementation(compose.components.resources)
         }
 
         desktopMain.dependencies {
@@ -91,6 +91,7 @@ kotlin {
 
         wasmJsMain.dependencies {
             implementation(libs.androidx.navigation.compose)
+            implementation("org.jetbrains.skiko:skiko-wasm-js:0.7.36")
         }
     }
 }
@@ -139,6 +140,7 @@ compose.desktop {
 }
 
 dependencies {
+    implementation(libs.androidx.ui.android)
     implementation(libs.androidx.navigation.runtime.android)
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)

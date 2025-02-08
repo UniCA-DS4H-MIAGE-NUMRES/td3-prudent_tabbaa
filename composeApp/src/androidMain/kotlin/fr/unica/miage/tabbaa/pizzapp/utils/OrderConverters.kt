@@ -1,4 +1,4 @@
-package fr.unica.miage.tabbaa.pizzapp.util
+package fr.unica.miage.tabbaa.pizzapp.utils
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

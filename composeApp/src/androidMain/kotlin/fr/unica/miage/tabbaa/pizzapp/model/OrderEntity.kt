@@ -3,7 +3,7 @@ package fr.unica.miage.tabbaa.pizzapp.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import fr.unica.miage.tabbaa.pizzapp.util.OrderConverters
+import fr.unica.miage.tabbaa.pizzapp.utils.OrderConverters
 
 @Entity(tableName = "orders")
 data class OrderEntity(
