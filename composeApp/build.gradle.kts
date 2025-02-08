@@ -70,7 +70,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-
+            implementation(compose.material3)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
@@ -90,7 +90,7 @@ kotlin {
         }
 
         wasmJsMain.dependencies {
-
+            implementation(libs.androidx.navigation.compose)
         }
     }
 }
@@ -139,6 +139,7 @@ compose.desktop {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation.runtime.android)
     add("kspAndroid", libs.room.compiler)
     add("kspDesktop", libs.room.compiler)
 
