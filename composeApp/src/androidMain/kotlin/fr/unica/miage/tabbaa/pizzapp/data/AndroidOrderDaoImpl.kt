@@ -3,6 +3,7 @@ package fr.unica.miage.tabbaa.pizzapp.data
 import fr.unica.miage.tabbaa.pizzapp.model.toEntity
 import fr.unica.miage.tabbaa.pizzapp.model.toOrder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class AndroidOrderDaoImpl(private val androidDao: AndroidOrderDao) : OrderDao {
@@ -16,5 +17,9 @@ class AndroidOrderDaoImpl(private val androidDao: AndroidOrderDao) : OrderDao {
 
     override suspend fun deleteAllOrders() {
         androidDao.deleteAllOrders()
+    }
+
+    override suspend fun refreshOrders() {
+        androidDao.getAllOrders().first()
     }
 }

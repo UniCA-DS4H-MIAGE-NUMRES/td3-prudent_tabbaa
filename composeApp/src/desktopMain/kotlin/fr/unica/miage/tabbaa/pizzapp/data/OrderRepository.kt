@@ -1,19 +1,33 @@
 package fr.unica.miage.tabbaa.pizzapp.data
 
 import fr.unica.miage.tabbaa.pizzapp.model.Order
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 actual class OrderRepository actual constructor(private val dao: OrderDao) {
-    private val orders = MutableStateFlow<List<Order>>(emptyList())
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    actual fun getOrders(): Flow<List<Order>> = dao.getAllOrders()
+    actual fun getOrders(): Flow<List<Order>> {
+        coroutineScope.launch {
+            dao.refreshOrders()
+        }
+        return dao.getAllOrders()
+    }
 
     actual suspend fun addOrder(order: Order) {
-        dao.insertOrder(order)
+        withContext(Dispatchers.IO) {
+            dao.insertOrder(order)
+            dao.refreshOrders()
+        }
     }
 
     actual suspend fun deleteAllOrders() {
-        dao.deleteAllOrders()
+        withContext(Dispatchers.IO) {
+            dao.deleteAllOrders()
+            dao.refreshOrders()
+        }
     }
 }

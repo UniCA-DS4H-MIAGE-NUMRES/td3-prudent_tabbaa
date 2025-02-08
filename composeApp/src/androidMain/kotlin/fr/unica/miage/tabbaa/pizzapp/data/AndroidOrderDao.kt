@@ -7,9 +7,6 @@ import androidx.room.Query
 import fr.unica.miage.tabbaa.pizzapp.model.OrderEntity
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Implémentation Android de OrderDao en utilisant Room.
- */
 @Dao
 interface AndroidOrderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,5 +17,7 @@ interface AndroidOrderDao {
 
     @Query("DELETE FROM orders")
     suspend fun deleteAllOrders()
-}
 
+    @Query("SELECT * FROM orders")
+    suspend fun refreshOrders(): List<OrderEntity>
+}

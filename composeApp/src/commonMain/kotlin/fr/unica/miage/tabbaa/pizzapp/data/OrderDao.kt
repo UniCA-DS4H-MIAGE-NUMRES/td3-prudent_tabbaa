@@ -7,4 +7,5 @@ interface OrderDao {
     suspend fun insertOrder(order: Order)
     fun getAllOrders(): Flow<List<Order>>
     suspend fun deleteAllOrders()
+    suspend fun refreshOrders()
 }
