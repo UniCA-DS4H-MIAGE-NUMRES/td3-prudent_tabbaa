@@ -23,11 +23,17 @@ class DataSource(private val orderDao: OrderDao) {
     // Fonction pour récupérer la liste des pizzas (FAUT METTRE LES VRAIES IMAGES A VOIR COMMENT FAIRE)
     fun getPizzas(): List<Pizza> {
         return listOf(
-            Pizza("Margherita", 8.0, 1, listOf("Tomate", "Mozzarella", "Basilic")),
-            Pizza("Diavola", 10.0, 2, listOf("Tomate", "Mozzarella", "Salami épicé")),
-            Pizza("Quattro Stagioni", 11.0, 3, listOf("Tomate", "Mozzarella", "Jambon", "Champignons")),
-            Pizza("Quattro Formaggi", 12.0, 4, listOf("Mozzarella", "Parmesan", "Gorgonzola", "Provolone")),
-            Pizza("Pepperoni", 9.0, 5, listOf("Tomate", "Mozzarella", "Pepperoni"))
+            Pizza(1, "Marguerita", 8.0, "pizza1.png", listOf("Tomate", "Mozzarella", "Basilic")),
+            Pizza(2, "Capricciosa", 10.0, "pizza2.png", listOf("Tomate", "Mozzarella", "Jambon", "Champignons")),
+            Pizza(3, "Diavola", 9.0, "pizza3.png", listOf("Tomate", "Mozzarella", "Salami épicé")),
+            Pizza(4, "Quattro Stagioni", 11.0, "pizza4.png", listOf("Tomate", "Mozzarella", "Artichauts", "Jambon", "Champignons")),
+            Pizza(5, "Quattro Formaggi", 12.0, "pizza5.png", listOf("Mozzarella", "Parmesan", "Gorgonzola", "Provolone")),
+            Pizza(6, "Marinara", 7.0, "pizza6.png", listOf("Tomate", "Ail", "Origan")),
+            Pizza(7, "Pepperoni", 9.0, "pizza7.png", listOf("Tomate", "Mozzarella", "Pepperoni")),
+            Pizza(8, "Prosciutto", 10.0, "pizza8.png", listOf("Tomate", "Mozzarella", "Jambon")),
+            Pizza(9 ,"Frutti di Mare", 13.0, "pizza9.png", listOf("Tomate", "Mozzarella", "Fruits de mer"))
         )
+
+
     }
 }
