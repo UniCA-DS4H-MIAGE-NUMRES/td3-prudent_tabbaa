@@ -8,10 +8,19 @@ import fr.unica.miage.tabbaa.pizzapp.navigation.rememberNavControllerWrapper
 import fr.unica.miage.tabbaa.pizzapp.screens.HomeScreen
 import fr.unica.miage.tabbaa.pizzapp.screens.MenuScreen
 import fr.unica.miage.tabbaa.pizzapp.screens.PizzaScreen
+import fr.unica.miage.tabbaa.pizzapp.utils.PlatformConfig
 
 @Composable
 fun App() {
     val navController = rememberNavControllerWrapper()
+
+    // Le `NavHost` gère la navigation dans Android
+    if (PlatformConfig.isAndroid) {
+        // `rememberNavControllerWrapper` contient le NavHost
+        return
+    }
+
+    // Autres plateformes (Desktop/Web)
     val dataSource = remember { DataSourceFactory.getInstance() }
     val pizzas = dataSource.getPizzas()
 
@@ -19,7 +28,6 @@ fun App() {
     var selectedPizza by remember { mutableStateOf<Pizza?>(null) }
 
     navController.onNavigate = { route ->
-        // Vérifie si la route correspond à l'écran des détails de la pizza
         if (route.startsWith("PizzaScreen/")) {
             val pizzaId = route.substringAfter("PizzaScreen/").toIntOrNull()
             selectedPizza = pizzas.find { it.id == pizzaId }
@@ -30,7 +38,6 @@ fun App() {
             currentScreen = route
         }
     }
-
 
     when (currentScreen) {
         "HomeScreen" -> HomeScreen(navController)
