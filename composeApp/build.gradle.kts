@@ -90,7 +90,12 @@ kotlin {
         }
 
         wasmJsMain.dependencies {
-            implementation(libs.androidx.navigation.compose)
+            implementation(compose.components.resources)
+            configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
+            configurations["wasmJsMainImplementation"].exclude(group = "org.jetbrains.compose.ui", module = "ui-tooling-preview")
+            implementation("androidx.navigation:navigation-compose:2.4.0-alpha10") {
+                exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-android")
+            }
             implementation("org.jetbrains.skiko:skiko-wasm-js:0.7.36")
         }
     }
