@@ -10,6 +10,9 @@ Développé par :
 - Gautier BENOIT
 - Arthur PRUDENT
 
+### Vidéo de démonstration (Android, Desktop & Web)
+🔗 [Regarder la vidéo sur YouTube](https://youtu.be/GHR2VW8nYTw)
+
 ### Technologies et packages utilisés
 
 - **Kotlin Multiplatform** pour le partage de code entre les plateformes.
