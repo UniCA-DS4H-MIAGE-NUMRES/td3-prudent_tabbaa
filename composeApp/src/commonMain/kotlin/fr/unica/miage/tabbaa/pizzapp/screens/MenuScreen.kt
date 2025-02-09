@@ -20,8 +20,19 @@ import androidx.compose.ui.unit.dp
 import fr.unica.miage.tabbaa.pizzapp.data.DataSourceFactory
 import fr.unica.miage.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
-import fr.unica.miage.tabbaa.pizzapp.utils.loadImage
 import fr.unica.miage.tabbaa.pizzapp.screens.BottomNavBar
+import org.jetbrains.compose.resources.painterResource
+import pizzapp.composeapp.generated.resources.Res
+import pizzapp.composeapp.generated.resources.logo
+import pizzapp.composeapp.generated.resources.pizza1
+import pizzapp.composeapp.generated.resources.pizza2
+import pizzapp.composeapp.generated.resources.pizza3
+import pizzapp.composeapp.generated.resources.pizza4
+import pizzapp.composeapp.generated.resources.pizza5
+import pizzapp.composeapp.generated.resources.pizza6
+import pizzapp.composeapp.generated.resources.pizza7
+import pizzapp.composeapp.generated.resources.pizza8
+import pizzapp.composeapp.generated.resources.pizza9
 import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +89,22 @@ fun MenuScreen(navController: NavControllerWrapper) {
 fun PizzaCard(
     pizza: Pizza,
     onClickPizza: () -> Unit
+
 ) {
+    val imageRes = when (pizza.image) {
+        "pizza1" -> Res.drawable.pizza1
+        "pizza2" -> Res.drawable.pizza2
+        "pizza3" -> Res.drawable.pizza3
+        "pizza4" -> Res.drawable.pizza4
+        "pizza5" -> Res.drawable.pizza5
+        "pizza6" -> Res.drawable.pizza6
+        "pizza7" -> Res.drawable.pizza7
+        "pizza8" -> Res.drawable.pizza8
+        "pizza9" -> Res.drawable.pizza9
+        else -> {
+            Res.drawable.logo
+        }
+    }
     Card(
         modifier = Modifier
             .clickable(onClick = { onClickPizza() })
@@ -101,7 +127,7 @@ fun PizzaCard(
         ) {
             // Charge dynamiquement l'image en utilisant `loadImage`
             Image(
-                painter = loadImage(pizza.image),
+                painter = painterResource(imageRes),
                 contentDescription = pizza.name,
                 modifier = Modifier.size(80.dp)
             )

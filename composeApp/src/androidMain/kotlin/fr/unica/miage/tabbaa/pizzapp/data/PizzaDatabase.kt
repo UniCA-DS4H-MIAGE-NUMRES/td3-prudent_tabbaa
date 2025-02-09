@@ -11,7 +11,7 @@ import fr.unica.miage.tabbaa.pizzapp.utils.OrderConverters
 /**
  * Classe qui définit la base de données Room pour Android
  */
-@Database(entities = [OrderEntity::class], version = 1, exportSchema = false)
+@Database(entities = [OrderEntity::class], version = 2, exportSchema = false) // 🔥 Increment version
 @TypeConverters(OrderConverters::class)
 abstract class PizzaDatabase : RoomDatabase() {
     abstract fun orderDao(): AndroidOrderDao
@@ -26,7 +26,9 @@ abstract class PizzaDatabase : RoomDatabase() {
                     context.applicationContext,
                     PizzaDatabase::class.java,
                     "pizza_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

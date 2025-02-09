@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.unica.miage.tabbaa.pizzapp.model.OrderItem
+import fr.unica.miage.tabbaa.pizzapp.model.Pizza
 
 class OrderConverters {
     private val gson = Gson()
@@ -19,7 +20,11 @@ class OrderConverters {
             emptyList()
         } else {
             val type = object : TypeToken<List<OrderItem>>() {}.type
-            gson.fromJson(orderItemsString, type)
+            val orderItems = gson.fromJson<List<OrderItem>>(orderItemsString, type)
+
+            orderItems.forEach { it.pizza = it.pizza.copy(image = it.pizza.image.toString()) }
+
+            orderItems
         }
     }
 }

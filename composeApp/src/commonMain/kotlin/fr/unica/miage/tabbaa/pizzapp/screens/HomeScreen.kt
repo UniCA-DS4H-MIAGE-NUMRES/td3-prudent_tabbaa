@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.unica.miage.tabbaa.pizzapp.navigation.NavControllerWrapper
 import fr.unica.miage.tabbaa.pizzapp.utils.PlatformConfig
-import fr.unica.miage.tabbaa.pizzapp.utils.loadImage
+import org.jetbrains.compose.resources.painterResource
+import pizzapp.composeapp.generated.resources.Res
+import pizzapp.composeapp.generated.resources.logo
 
 @Composable
 fun HomeScreen(navController: NavControllerWrapper) {
@@ -28,13 +30,11 @@ fun HomeScreen(navController: NavControllerWrapper) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                if (!PlatformConfig.isWeb) {
-                    Image(
-                        painter = loadImage("logo.png"),
-                        contentDescription = "PizzaApp Logo",
-                        modifier = Modifier.size(240.dp)
-                    )
-                }
+                Image(
+                    painter = painterResource(Res.drawable.logo),
+                    contentDescription = "PizzaApp Logo",
+                    modifier = Modifier.size(240.dp)
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
