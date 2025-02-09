@@ -59,3 +59,5 @@ Via le terminal, la commande `./gradlew run`
 
 #### Web
 Via le terminal, la commande `./gradlew wasmJsBrowserRun`
+
+![PizzaApp](PizzaApp.png)
