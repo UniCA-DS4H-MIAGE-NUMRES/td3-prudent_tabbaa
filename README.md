@@ -1,7 +1,4 @@
-# Projet
-
-## Université Côte d'Azur - DS4H - M2 MIAGE NumRes
-### Cours de Programmation Mobile Moderne - Leo Donati
+# Projet PizzApp
 
 Ce projet est une application multiplateforme, PizzaApp, développée avec Kotlin et Jetpack Compose. Elle cible **Android**, **Desktop** et **Web**, en utilisant des modules spécifiques pour chaque plateforme tout en partageant une partie importante de la logique via le code commun (`commonMain`).
 
