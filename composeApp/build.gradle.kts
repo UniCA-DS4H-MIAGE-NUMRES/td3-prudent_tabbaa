@@ -135,6 +135,9 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "fr.unica.miage.tabbaa.pizzapp"
             packageVersion = "1.0.0"
+            windows {
+                iconFile.set(file("src/commonMain/resources/logo.png"))
+            }
         }
     }
 }
