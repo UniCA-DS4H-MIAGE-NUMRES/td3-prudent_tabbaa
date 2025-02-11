@@ -72,7 +72,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation("org.xerial:sqlite-jdbc:3.43.2.0")
+            implementation(libs.sqlite.jdbc)
         }
     }
 }

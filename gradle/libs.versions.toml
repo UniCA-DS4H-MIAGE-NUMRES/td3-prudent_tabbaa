@@ -17,6 +17,7 @@ kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 kotlinxSerializationJson = "1.7.3"
 roomCommon = "2.6.1"
+sqliteJdbc = "3.44.1.0"
 webCore = "1.5.0"
 roomKtx = "2.6.1"
 sqlite = "2.1.0"
@@ -42,6 +43,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqliteJdbc" }
 web-core = { module = "org.jetbrains.compose.web:web-core", version.ref = "webCore" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
