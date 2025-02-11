@@ -9,10 +9,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinxSerialization)
-
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
 }
 
 kotlin {
@@ -22,9 +19,9 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm("desktop")
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -35,7 +32,6 @@ kotlin {
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
                         add(rootDirPath)
                         add(projectDirPath)
                     }
@@ -47,21 +43,21 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
-
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json) // Version compatible WASM
+                implementation(libs.kotlinx.coroutines.core) // Coroutines pour WASM
+            }
+        }
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.android)
-
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.koin.core)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.room.runtime)
+            implementation(libs.androidx.room.common)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.gson)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.ktx)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,43 +66,23 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(compose.components.resources)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
         }
-
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.koin.core)
-
             implementation("org.xerial:sqlite-jdbc:3.43.2.0")
-        }
-
-        wasmJsMain.dependencies {
-            implementation(compose.components.resources)
-            configurations["wasmJsMainImplementation"].exclude(group = "app.cash.sqldelight")
-            configurations["wasmJsMainImplementation"].exclude(group = "org.jetbrains.compose.ui", module = "ui-tooling-preview")
-            implementation("androidx.navigation:navigation-compose:2.4.0-alpha10") {
-                exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-android")
-            }
-            implementation("org.jetbrains.skiko:skiko-wasm-js:0.7.36")
         }
     }
 }
 
 android {
-    namespace = "fr.unica.miage.tabbaa.pizzapp"
+    namespace = "fr.unica.miage.numres.tabbaa.pizzapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "fr.unica.miage.tabbaa.pizzapp"
+        applicationId = "fr.unica.miage.numres.tabbaa.pizzapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -129,33 +105,20 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     debugImplementation(compose.uiTooling)
+    ksp(libs.androidx.room.compiler)
 }
 
 compose.desktop {
     application {
-        mainClass = "fr.unica.miage.tabbaa.pizzapp.MainKt"
+        mainClass = "fr.unica.miage.numres.tabbaa.pizzapp.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "fr.unica.miage.tabbaa.pizzapp"
+            packageName = "fr.unica.miage.numres.tabbaa.pizzapp"
             packageVersion = "1.0.0"
-            windows {
-                iconFile.set(file("src/commonMain/resources/logo.png"))
-            }
         }
     }
-}
-
-dependencies {
-    implementation(libs.navigation.runtime.ktx)
-    implementation(libs.androidx.ui.android)
-    implementation(libs.androidx.navigation.runtime.android)
-    add("kspAndroid", libs.room.compiler)
-    add("kspDesktop", libs.room.compiler)
-
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
