@@ -49,6 +49,11 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core) // Coroutines pour WASM
             }
         }
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            }
+        }
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)

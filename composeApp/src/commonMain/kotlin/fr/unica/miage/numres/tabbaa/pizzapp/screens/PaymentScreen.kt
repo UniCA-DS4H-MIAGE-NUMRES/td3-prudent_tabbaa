@@ -18,7 +18,7 @@ import fr.unica.miage.numres.tabbaa.pizzapp.data.OrderRepository
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Order
 import fr.unica.miage.numres.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.numres.tabbaa.pizzapp.navigation.NavControllerWrapper
-/*import fr.unica.miage.numres.tabbaa.pizzapp.utils.getCurrentDate*/
+import fr.unica.miage.numres.tabbaa.pizzapp.utils.getCurrentDate
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.round
@@ -139,7 +139,7 @@ fun PaymentScreen(
                     if (selectedPaymentMethod != null) {
                         coroutineScope.launch {
                             val order = Order(
-                                date = /*getCurrentDate(),*/ "01/01/1987",
+                                date = getCurrentDate(),
                                 totalPrice = totalPrice,
                                 paymentMethod = selectedPaymentMethod!!,
                                 items = cartItemsState
