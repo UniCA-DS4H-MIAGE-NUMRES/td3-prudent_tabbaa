@@ -8,7 +8,7 @@ Développé par :
 - Arthur PRUDENT
 
 ### Vidéo de démonstration (Android, Desktop & Web)
-🔗 [Regarder la vidéo sur YouTube](https://youtu.be/GHR2VW8nYTw)
+🔗 [Regarder la vidéo sur YouTube](https://youtu.be/ZlW-Divbviw)
 
 ### Technologies et packages utilisés
 
