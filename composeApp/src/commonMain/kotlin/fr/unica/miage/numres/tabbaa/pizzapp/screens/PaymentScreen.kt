@@ -18,6 +18,7 @@ import fr.unica.miage.numres.tabbaa.pizzapp.data.OrderRepository
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Order
 import fr.unica.miage.numres.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.numres.tabbaa.pizzapp.navigation.NavControllerWrapper
+import fr.unica.miage.numres.tabbaa.pizzapp.utils.PlatformConfig
 import fr.unica.miage.numres.tabbaa.pizzapp.utils.getCurrentDate
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -52,14 +53,15 @@ fun PaymentScreen(
                 title = {
                     Text(
                         text = "Paiement",
-                        style = MaterialTheme.typography.h6,
+                        fontSize = PlatformConfig.titleSize.sp,
                         color = Color.White
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate("CaddyScreen")
-                    }) {
+                    IconButton(
+                        onClick = { navController.navigate("CaddyScreen") },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Retour",
@@ -75,43 +77,43 @@ fun PaymentScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(PlatformConfig.screenPadding.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Récapitulatif",
-                    fontSize = 32.sp,
+                    fontSize = PlatformConfig.summaryTitleSize.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF1E8560),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = PlatformConfig.elementSpacing.dp)
                 )
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(PlatformConfig.elementSpacing.dp)
                         .background(
                             color = Color.Transparent,
                             shape = MaterialTheme.shapes.medium
                         )
-                        .padding(16.dp),
+                        .padding(PlatformConfig.screenPadding.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Total à payer : ${round(totalPrice * 100) / 100}€",
-                        fontSize = 20.sp,
+                        fontSize = PlatformConfig.totalPriceSize.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(PlatformConfig.elementSpacing.dp),
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -132,7 +134,7 @@ fun PaymentScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
 
             Button(
                 onClick = {
@@ -151,11 +153,15 @@ fun PaymentScreen(
                     }
                 },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(50.dp),
+                    .fillMaxWidth(PlatformConfig.buttonWidth)
+                    .height(PlatformConfig.buttonHeight.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFA0522D))
             ) {
-                Text("Payer", fontSize = 16.sp, color = Color.White)
+                Text(
+                    "Payer",
+                    fontSize = PlatformConfig.paymentButtonTextSize.sp,
+                    color = Color.White
+                )
             }
         }
     }
@@ -167,7 +173,7 @@ fun PaymentScreen(
             title = {
                 Text(
                     text = "Paiement Réussi",
-                    style = MaterialTheme.typography.h6,
+                    fontSize = PlatformConfig.dialogTitleSize.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFD32F2F)
                 )
@@ -175,7 +181,7 @@ fun PaymentScreen(
             text = {
                 Text(
                     "Votre paiement a été effectué avec succès. Merci pour votre commande !",
-                    style = MaterialTheme.typography.body1,
+                    fontSize = PlatformConfig.dialogMessageSize.sp,
                     color = Color.Black
                 )
             },
@@ -187,7 +193,11 @@ fun PaymentScreen(
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFA0522D))
                 ) {
-                    Text("OK", style = MaterialTheme.typography.subtitle1, color = Color.White)
+                    Text(
+                        "OK",
+                        fontSize = PlatformConfig.dialogButtonTextSize.sp,
+                        color = Color.White
+                    )
                 }
             }
         )
@@ -203,21 +213,22 @@ fun PaymentOption(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(PlatformConfig.paymentOptionHeight.dp)
             .clickable(onClick = onSelect)
             .padding(4.dp),
+        elevation = PlatformConfig.cardElevation.dp,
         backgroundColor = if (isSelected) Color(0xFFA0522D) else Color(0xFFE3B58A)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = PlatformConfig.screenPadding.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = label,
-                fontSize = 18.sp,
+                fontSize = PlatformConfig.paymentOptionTextSize.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isSelected) Color(0xFFFFF8E1) else Color.Black
             )
@@ -225,7 +236,8 @@ fun PaymentOption(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Sélectionné",
-                    tint = Color.Black
+                    tint = Color.Black,
+                    modifier = Modifier.size(PlatformConfig.iconSize.dp)
                 )
             }
         }

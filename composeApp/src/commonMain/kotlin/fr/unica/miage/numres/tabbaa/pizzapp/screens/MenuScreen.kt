@@ -17,9 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fr.unica.miage.numres.tabbaa.pizzapp.data.DataSourceFactory
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.numres.tabbaa.pizzapp.navigation.NavControllerWrapper
+import fr.unica.miage.numres.tabbaa.pizzapp.utils.PlatformConfig
 import org.jetbrains.compose.resources.painterResource
 import pizzapp.composeapp.generated.resources.Res
 import pizzapp.composeapp.generated.resources.*
@@ -36,9 +38,18 @@ fun MenuScreen(navController: NavControllerWrapper) {
         backgroundColor = Color(0xFFFFF8E1),
         topBar = {
             TopAppBar(
-                title = { Text("Menu des Pizzas", style = MaterialTheme.typography.h6, color = Color.White) },
+                title = {
+                    Text(
+                        "Menu des Pizzas",
+                        fontSize = PlatformConfig.titleSize.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("HomeScreen") }) {
+                    IconButton(
+                        onClick = { navController.navigate("HomeScreen") },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Retour",
@@ -54,13 +65,13 @@ fun MenuScreen(navController: NavControllerWrapper) {
         }
     ) { innerPadding ->
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(if (PlatformConfig.isWeb) 3 else 2),
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(PlatformConfig.screenPadding.dp),
+            verticalArrangement = Arrangement.spacedBy(PlatformConfig.gridSpacing.dp),
+            horizontalArrangement = Arrangement.spacedBy(PlatformConfig.gridSpacing.dp)
         ) {
             items(pizzas) { pizza ->
                 PizzaCard(
@@ -96,16 +107,19 @@ fun PizzaCard(
         modifier = Modifier
             .clickable(onClick = onClickPizza)
             .shadow(
-                elevation = 8.dp,
+                elevation = PlatformConfig.cardElevation.dp,
                 shape = MaterialTheme.shapes.medium
             )
             .clip(MaterialTheme.shapes.medium)
-            .size(width = 160.dp, height = 200.dp),
+            .size(
+                width = PlatformConfig.cardWidth.dp,
+                height = PlatformConfig.cardHeight.dp
+            ),
         backgroundColor = Color(0xFFFFF8E1)
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(PlatformConfig.cardPadding.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
@@ -113,17 +127,17 @@ fun PizzaCard(
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = pizza.name,
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(PlatformConfig.imageSize.dp)
             )
             Text(
                 text = pizza.name,
-                style = MaterialTheme.typography.subtitle1,
+                fontSize = PlatformConfig.pizzaNameSize.sp,
                 color = Color(0xFF1E8560),
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
                 text = "Prix: ${round(pizza.price * 100) / 100}€",
-                style = MaterialTheme.typography.body1,
+                fontSize = PlatformConfig.pizzaPriceSize.sp,
                 color = Color.Black
             )
         }

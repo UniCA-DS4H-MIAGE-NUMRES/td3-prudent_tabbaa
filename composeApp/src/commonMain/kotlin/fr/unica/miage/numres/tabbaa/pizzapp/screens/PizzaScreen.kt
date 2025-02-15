@@ -32,6 +32,7 @@ fun PizzaScreen(
     var extraCheese by remember { mutableStateOf(0) }
     val scrollState = rememberScrollState()
     val scaffoldState = rememberScaffoldState()
+    var showSnackbar by remember { mutableStateOf(false) } // État pour afficher le Snackbar
 
     val imageRes = when (pizza.image) {
         "pizza1" -> Res.drawable.pizza1
@@ -51,10 +52,23 @@ fun PizzaScreen(
         backgroundColor = Color(0xFFFFF8E1),
         topBar = {
             TopAppBar(
-                title = { Text("Détails de la Pizza", color = Color.White) },
+                title = {
+                    Text(
+                        "Détails de la Pizza",
+                        fontSize = PlatformConfig.titleSize.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("MenuScreen") }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
+                    IconButton(
+                        onClick = { navController.navigate("MenuScreen") },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Retour",
+                            tint = Color.White
+                        )
                     }
                 },
                 backgroundColor = Color(0xFFE3B58A)
@@ -62,6 +76,9 @@ fun PizzaScreen(
         },
         bottomBar = {
             BottomNavBar(navController = navController)
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = scaffoldState.snackbarHostState)
         }
     ) { innerPadding ->
         Column(
@@ -69,57 +86,90 @@ fun PizzaScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(16.dp),
+                .padding(PlatformConfig.screenPadding.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = pizza.name,
-                modifier = Modifier.size(180.dp)
+                modifier = Modifier.size(PlatformConfig.pizzaImageSize.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
 
-            Text(pizza.name, fontSize = 28.sp, color = Color(0xFF1E8560))
-            Text("Prix: ${round(pizza.price * 100) / 100}€", fontSize = 20.sp, color = Color.Black)
-            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                pizza.name,
+                fontSize = PlatformConfig.pizzaNameSize.sp,
+                color = Color(0xFF1E8560)
+            )
+            Text(
+                "Prix: ${round(pizza.price * 100) / 100}€",
+                fontSize = PlatformConfig.pizzaPriceSize.sp,
+                color = Color.Black
+            )
 
-            Text("Ingrédients :", fontSize = 20.sp, color = Color(0xFFA0522D))
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
+
+            Text(
+                "Ingrédients :",
+                fontSize = PlatformConfig.ingredientsTitleSize.sp,
+                color = Color(0xFFA0522D)
+            )
+
+            Spacer(modifier = Modifier.height(PlatformConfig.ingredientSpacing.dp))
+
             pizza.ingredients.forEach { ingredient ->
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .fillMaxWidth(0.8f)
+                        .padding(vertical = PlatformConfig.ingredientSpacing.dp)
                         .background(Color(0xFFE3B58A), shape = MaterialTheme.shapes.medium)
-                        .padding(8.dp),
+                        .padding(PlatformConfig.ingredientPadding.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Filled.Check, contentDescription = null, tint = Color(0xFFE63946))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(ingredient, style = MaterialTheme.typography.body1)
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = null,
+                        tint = Color(0xFFE63946),
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    )
+                    Spacer(modifier = Modifier.width(PlatformConfig.ingredientSpacing.dp))
+                    Text(
+                        ingredient,
+                        fontSize = PlatformConfig.ingredientTextSize.sp
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
 
-            Text("Fromage supplémentaire : $extraCheese g", fontSize = 16.sp)
+            Text(
+                "Fromage supplémentaire : $extraCheese g",
+                fontSize = PlatformConfig.cheeseTextSize.sp
+            )
+
             Slider(
                 value = extraCheese.toFloat(),
                 onValueChange = { extraCheese = (round(it / 10) * 10).toInt() },
                 valueRange = 0f..100f,
                 steps = 9,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(PlatformConfig.sliderHeight.dp),
                 colors = SliderDefaults.colors(
                     thumbColor = Color(0xFFE63946),
                     activeTrackColor = Color(0xFFFFC107)
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.elementSpacing.dp))
 
             Button(
-                onClick = { onAddToCart(pizza, extraCheese) },
+                onClick = {
+                    onAddToCart(pizza, extraCheese)
+                    showSnackbar = true // Déclenche l'affichage du Snackbar
+                },
                 modifier = Modifier
                     .fillMaxWidth(PlatformConfig.buttonWidth)
                     .height(PlatformConfig.buttonHeight.dp),
@@ -128,8 +178,18 @@ fun PizzaScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text("Ajouter au Panier")
+                Text(
+                    "Ajouter au Panier",
+                    fontSize = PlatformConfig.bottomTextSiza.sp
+                )
             }
+        }
+    }
+
+    LaunchedEffect(showSnackbar) {
+        if (showSnackbar) {
+            scaffoldState.snackbarHostState.showSnackbar("Pizza ajoutée au panier !")
+            showSnackbar = false
         }
     }
 }

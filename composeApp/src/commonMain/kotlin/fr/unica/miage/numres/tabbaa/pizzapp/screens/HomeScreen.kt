@@ -29,21 +29,21 @@ fun HomeScreen(navController: NavControllerWrapper) {
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(PlatformConfig.contentPadding.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Image(
                 painter = painterResource(Res.drawable.logo),
                 contentDescription = "PizzaApp Logo",
-                modifier = Modifier.size(240.dp)
+                modifier = Modifier.size(PlatformConfig.logoSize.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.spacerHeight.dp))
 
             Text(
                 text = "PizzaApp",
-                fontSize = 32.sp,
+                fontSize = PlatformConfig.titleSize.sp,
                 color = Color.Black
             )
 
@@ -51,48 +51,49 @@ fun HomeScreen(navController: NavControllerWrapper) {
 
             Text(
                 text = "Les meilleures pizzas italiennes livrées chez vous !",
-                fontSize = 18.sp,
+                fontSize = PlatformConfig.subtitleSize.sp,
                 color = Color(0xFF8D6E63),
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = PlatformConfig.contentPadding.dp)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(PlatformConfig.spacerHeight.dp))
 
-            GradientButton(
+            HomeButton(
                 text = "Voir le menu",
-                gradient = Brush.horizontalGradient(
-                    colors = listOf(Color(0xFFE63946), Color(0xFFF4A261))
-                ),
-                onClick = {
-                    navController.navigate("MenuScreen")
-                }
+                colors = listOf(Color(0xFFE63946), Color(0xFFF4A261)),
+                onClick = { navController.navigate("MenuScreen") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            GradientButton(
+            HomeButton(
                 text = "Voir le panier",
-                gradient = Brush.horizontalGradient(
-                    colors = listOf(Color(0xFF2A9D8F), Color(0xFF1E8560))
-                ),
-                onClick = {
-                    navController.navigate("CaddyScreen")
-                }
+                colors = listOf(Color(0xFF2A9D8F), Color(0xFF1E8560)),
+                onClick = { navController.navigate("CaddyScreen") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            GradientButton(
+            HomeButton(
                 text = "Voir l'historique des commandes",
-                gradient = Brush.horizontalGradient(
-                    colors = listOf(Color(0xFFE3B58A), Color(0xFF8D6E63))
-                ),
-                onClick = {
-                    navController.navigate("CommandeHistoryScreen")
-                }
+                colors = listOf(Color(0xFFE3B58A), Color(0xFF8D6E63)),
+                onClick = { navController.navigate("CommandeHistoryScreen") }
             )
         }
     }
+}
+
+@Composable
+private fun HomeButton(
+    text: String,
+    colors: List<Color>,
+    onClick: () -> Unit
+) {
+    GradientButton(
+        text = text,
+        gradient = Brush.horizontalGradient(colors = colors),
+        onClick = onClick
+    )
 }
 
 @Composable
@@ -121,7 +122,7 @@ fun GradientButton(
         ) {
             Text(
                 text = text,
-                fontSize = PlatformConfig.textSize.sp,
+                fontSize = PlatformConfig.bottomTextSiza.sp,
                 color = Color.White
             )
         }

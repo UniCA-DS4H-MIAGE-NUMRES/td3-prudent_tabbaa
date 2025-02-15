@@ -15,12 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fr.unica.miage.numres.tabbaa.pizzapp.model.OrderItem
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.numres.tabbaa.pizzapp.navigation.NavControllerWrapper
+import fr.unica.miage.numres.tabbaa.pizzapp.utils.PlatformConfig
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.round
 
@@ -47,10 +48,25 @@ fun CaddyScreen(
         backgroundColor = Color(0xFFFFF8E1),
         topBar = {
             TopAppBar(
-                title = { Text("Votre Panier", style = MaterialTheme.typography.h6, color = Color.White) },
+                title = {
+                    Text(
+                        "Votre Panier",
+                        style = MaterialTheme.typography.h6.copy(
+                            fontSize = PlatformConfig.titleSize.sp
+                        ),
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("MenuScreen") }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
+                    IconButton(
+                        onClick = { navController.navigate("MenuScreen") },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Retour",
+                            tint = Color.White
+                        )
                     }
                 },
                 backgroundColor = Color(0xFFE3B58A)
@@ -69,8 +85,8 @@ fun CaddyScreen(
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(horizontal = PlatformConfig.screenPadding.dp),
+                verticalArrangement = Arrangement.spacedBy(PlatformConfig.itemSpacing.dp)
             ) {
                 items(cartItemsState) { item ->
                     CartItem(
@@ -85,24 +101,30 @@ fun CaddyScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(PlatformConfig.screenPadding.dp)
                     .background(Color.Transparent, shape = MaterialTheme.shapes.medium)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(PlatformConfig.cardPadding.dp),
+                verticalArrangement = Arrangement.spacedBy(PlatformConfig.itemSpacing.dp)
             ) {
                 Text(
                     text = "Total: ${round(totalPrice * 100) / 100}€",
-                    style = MaterialTheme.typography.h5,
+                    fontSize = PlatformConfig.totalPriceSize.sp,
                     color = Color.Black,
                     modifier = Modifier.align(Alignment.End)
                 )
 
                 Button(
                     onClick = { navController.navigate("PaymentScreen") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth(PlatformConfig.buttonWidth)
+                        .height(PlatformConfig.buttonHeight.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFA0522D))
                 ) {
-                    Text("Passer la commande", color = Color.White)
+                    Text(
+                        "Passer la commande",
+                        color = Color.White,
+                        fontSize = PlatformConfig.bottomTextSiza.sp
+                    )
                 }
             }
         }
@@ -118,16 +140,15 @@ fun CartItem(
 ) {
     Card(
         modifier = Modifier
-            .shadow(20.dp)
             .clip(MaterialTheme.shapes.medium)
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(PlatformConfig.cartItemPadding.dp),
         backgroundColor = Color(0xFFFFF8E1)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(PlatformConfig.cardPadding.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -135,17 +156,21 @@ fun CartItem(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(text = item.pizza.name, style = MaterialTheme.typography.h6, color = Color(0xFF1E8560))
+                Text(
+                    text = item.pizza.name,
+                    fontSize = PlatformConfig.titleSize.sp,
+                    color = Color(0xFF1E8560)
+                )
                 Text(
                     text = "Prix: ${round(item.pizza.price * 100) / 100}€",
-                    style = MaterialTheme.typography.body1,
+                    fontSize = PlatformConfig.priceSize.sp,
                     color = Color.Black
                 )
                 Text(
                     text = if (item.extraCheese > 0)
                         "Fromage supplémentaire: ${item.extraCheese} g (${round(item.extraCheese * 0.02 * 100) / 100}€)"
                     else "Pas de fromage supplémentaire",
-                    style = MaterialTheme.typography.body2,
+                    fontSize = PlatformConfig.descriptionSize.sp,
                     color = Color(0xFFA0522D)
                 )
             }
@@ -159,7 +184,8 @@ fun CartItem(
                         if (item.extraCheese > 0) {
                             onUpdateQuantity(item.id, item.extraCheese - 10)
                         }
-                    }
+                    },
+                    modifier = Modifier.size(PlatformConfig.iconSize.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
@@ -170,7 +196,7 @@ fun CartItem(
 
                 Text(
                     text = item.extraCheese.toString(),
-                    style = MaterialTheme.typography.h6,
+                    fontSize = PlatformConfig.quantitySize.sp,
                     color = Color(0xFFA0522D)
                 )
 
@@ -179,7 +205,8 @@ fun CartItem(
                         if (item.extraCheese + 10 <= 100) {
                             onUpdateQuantity(item.id, item.extraCheese + 10)
                         }
-                    }
+                    },
+                    modifier = Modifier.size(PlatformConfig.iconSize.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowUp,
@@ -189,7 +216,10 @@ fun CartItem(
                 }
             }
 
-            IconButton(onClick = onAddDuplicate) {
+            IconButton(
+                onClick = onAddDuplicate,
+                modifier = Modifier.size(PlatformConfig.iconSize.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add Same Pizza",
@@ -197,7 +227,10 @@ fun CartItem(
                 )
             }
 
-            IconButton(onClick = onRemoveItem) {
+            IconButton(
+                onClick = onRemoveItem,
+                modifier = Modifier.size(PlatformConfig.iconSize.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Remove Item",

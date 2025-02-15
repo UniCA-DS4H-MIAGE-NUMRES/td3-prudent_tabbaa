@@ -16,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fr.unica.miage.numres.tabbaa.pizzapp.data.OrderRepository
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Order
 import fr.unica.miage.numres.tabbaa.pizzapp.model.Pizza
 import fr.unica.miage.numres.tabbaa.pizzapp.navigation.NavControllerWrapper
 import fr.unica.miage.numres.tabbaa.pizzapp.model.OrderItem
+import fr.unica.miage.numres.tabbaa.pizzapp.utils.PlatformConfig
 import kotlinx.coroutines.launch
 import kotlin.math.round
 
@@ -46,20 +48,40 @@ fun CommandeHistoryScreen(
         backgroundColor = Color(0xFFFFF8E1),
         topBar = {
             TopAppBar(
-                title = { Text("Historique des Commandes", style = MaterialTheme.typography.h6, color = Color.White) },
+                title = {
+                    Text(
+                        "Historique des Commandes",
+                        fontSize = PlatformConfig.titleSize.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("HomeScreen") }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Retour", tint = Color.White)
+                    IconButton(
+                        onClick = { navController.navigate("HomeScreen") },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Retour",
+                            tint = Color.White
+                        )
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        coroutineScope.launch {
-                            orderRepository.deleteAllOrders()
-                            orderHistory.value = emptyList()
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Supprimer toutes les commandes", tint = Color.White)
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                orderRepository.deleteAllOrders()
+                                orderHistory.value = emptyList()
+                            }
+                        },
+                        modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Supprimer toutes les commandes",
+                            tint = Color.White
+                        )
                     }
                 },
                 backgroundColor = Color(0xFFE3B58A)
@@ -78,7 +100,7 @@ fun CommandeHistoryScreen(
             ) {
                 Text(
                     "Aucune commande enregistrée.",
-                    style = MaterialTheme.typography.body1,
+                    fontSize = PlatformConfig.emptyMessageSize.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFA0522D)
                 )
@@ -88,8 +110,8 @@ fun CommandeHistoryScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(PlatformConfig.screenPadding.dp),
+                verticalArrangement = Arrangement.spacedBy(PlatformConfig.itemSpacing.dp)
             ) {
                 items(orderHistory.value) { order ->
                     OrderCard(order)
@@ -106,12 +128,13 @@ fun OrderCard(order: Order) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(PlatformConfig.cardPadding.dp)
             .background(Color(0xFFFFF8E1)),
+        elevation = PlatformConfig.cardElevation.dp,
         backgroundColor = Color(0xFFFFF8E1)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(PlatformConfig.cardPadding.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -119,11 +142,27 @@ fun OrderCard(order: Order) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("Date : ${order.date}", fontWeight = FontWeight.Bold, color = Color(0xFF1E8560))
-                    Text("Total : ${round(order.totalPrice * 100) / 100}€", color = Color.Black)
-                    Text("Paiement : ${order.paymentMethod}", color = Color(0xFFA0522D))
+                    Text(
+                        "Date : ${order.date}",
+                        fontSize = PlatformConfig.orderDateSize.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1E8560)
+                    )
+                    Text(
+                        "Total : ${round(order.totalPrice * 100) / 100}€",
+                        fontSize = PlatformConfig.orderTotalSize.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        "Paiement : ${order.paymentMethod}",
+                        fontSize = PlatformConfig.orderDetailsSize.sp,
+                        color = Color(0xFFA0522D)
+                    )
                 }
-                IconButton(onClick = { isExpanded = !isExpanded }) {
+                IconButton(
+                    onClick = { isExpanded = !isExpanded },
+                    modifier = Modifier.size(PlatformConfig.iconSize.dp)
+                ) {
                     Icon(
                         imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                         contentDescription = "Expand Order",
@@ -133,39 +172,12 @@ fun OrderCard(order: Order) {
             }
 
             if (isExpanded) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(PlatformConfig.itemSpacing.dp))
                 order.items.forEach { item ->
                     OrderItemView(item = item)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun OrderItem(
-    pizza: Pizza,
-    quantity: Int,
-    extraCheese: Int
-) {
-    val cheesePrice = extraCheese * 0.02
-    val totalPrice = pizza.price + cheesePrice
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .background(Color(0xFFFFF8E1))
-            .padding(8.dp)
-    ) {
-        Text(pizza.name, fontWeight = FontWeight.Bold, color = Color(0xFF1E8560))
-        Text("Quantité : $quantity", color = Color.Black)
-        Text(
-            if (extraCheese > 0) "Fromage supplémentaire : $extraCheese g (${round(cheesePrice * 100) / 100}€)"
-            else "Pas de fromage supplémentaire",
-            color = Color(0xFFA0522D)
-        )
-        Text("Prix total : ${round(totalPrice * 100) / 100}€", color = Color.Black)
     }
 }
 
@@ -177,19 +189,33 @@ fun OrderItemView(item: OrderItem) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(PlatformConfig.cardPadding.dp)
             .background(Color(0xFFFFF8E1))
-            .padding(8.dp)
+            .padding(PlatformConfig.cardPadding.dp)
     ) {
-        Text(item.pizza.name, fontWeight = FontWeight.Bold, color = Color(0xFF1E8560))
-        Text("Quantité : ${item.quantity}", color = Color.Black)
+        Text(
+            item.pizza.name,
+            fontSize = PlatformConfig.headerTextSize.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1E8560)
+        )
+        Text(
+            "Quantité : ${item.quantity}",
+            fontSize = PlatformConfig.bodyTextSize.sp,
+            color = Color.Black
+        )
         Text(
             if (item.extraCheese > 0)
                 "Fromage supplémentaire : ${item.extraCheese} g (${round(cheesePrice * 100) / 100}€)"
             else
                 "Pas de fromage supplémentaire",
+            fontSize = PlatformConfig.bodyTextSize.sp,
             color = Color(0xFFA0522D)
         )
-        Text("Prix total : ${round(totalPrice * 100) / 100}€", color = Color.Black)
+        Text(
+            "Prix total : ${round(totalPrice * 100) / 100}€",
+            fontSize = PlatformConfig.bodyTextSize.sp,
+            color = Color.Black
+        )
     }
 }

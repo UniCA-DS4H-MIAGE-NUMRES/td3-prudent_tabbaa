@@ -22,26 +22,44 @@ fun BottomNavBar(navController: NavControllerWrapper) {
     ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Home, contentDescription = "Accueil") },
-            label = { Text("Accueil") },
+            label = {
+                Text(
+                    "Accueil",
+                    fontSize = PlatformConfig.bottomTextSiza.sp
+                )
+            },
             selected = false,
             onClick = { navController.navigate("HomeScreen") }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Menu, contentDescription = "Menu") },
-            label = { Text("Menu") },
+            label = {
+                Text(
+                    "Menu",
+                    fontSize = PlatformConfig.bottomTextSiza.sp
+                )
+            },
             selected = false,
             onClick = { navController.navigate("MenuScreen") }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Panier") },
-            label = { Text("Panier") },
+            label = {
+                Text(
+                    "Panier",
+                    fontSize = PlatformConfig.bottomTextSiza.sp
+                )
+            },
             selected = false,
             onClick = { navController.navigate("CaddyScreen") }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Filled.Face, contentDescription = "Historique") },
             label = {
-                Text("Historique", fontSize = PlatformConfig.textSize.sp)
+                Text(
+                    "Historique",
+                    fontSize = PlatformConfig.bottomTextSiza.sp
+                )
             },
             selected = false,
             onClick = { navController.navigate("CommandeHistoryScreen") }
